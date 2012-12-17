@@ -3,6 +3,7 @@
 namespace SpeckCatalogTest\Mapper;
 
 use PHPUnit\Extensions\Database\TestCase;
+use Mockery;
 
 class AbstractServiceTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,8 +15,7 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
 
         $service = $this->getService();
         $service->setEntityMapper($mockedMapper);
-        $data = array('return_model' => true);
-        $service->find($data);
+        $service->find(array());
     }
 
     public function testPopulateReturnsInstanceOfModelParam()
@@ -25,8 +25,48 @@ class AbstractServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($return instanceOf \SpeckCatalog\Model\Product);
     }
 
-    public function testGetEntity()
+    public function testGetEntityCallsGetEntityPrototypeOnMapper()
     {
+        $mockedMapper = $this->getMock('\SpeckCatalog\Mapper\AbstractMapper');
+        $mockedMapper->expects($this->once())
+            ->method('getEntityPrototype');
+
+        $service = $this->getService();
+        $service->setEntityMapper($mockedMapper);
+        $service->getEntity();
+    }
+
+    public function testUpdateCallsUpdateOnMapper()
+    {
+        $mockedMapper = $this->getMock('\SpeckCatalog\Mapper\AbstractMapper');
+        $mockedMapper->expects($this->once())
+            ->method('update');
+
+        $service = $this->getService();
+        $service->setEntityMapper($mockedMapper);
+        $service->update(array());
+    }
+
+    public function testInsertCallsInsertOnMapper()
+    {
+        $mockedMapper = $this->getMock('\SpeckCatalog\Mapper\AbstractMapper');
+        $mockedMapper->expects($this->once())
+            ->method('insert');
+
+        $service = $this->getService();
+        $service->setEntityMapper($mockedMapper);
+        $service->insert(array());
+    }
+
+    public function testUsePaginatorCallsUsePaginatorOnMapper()
+    {
+        $mockedMapper = $this->getMock('\SpeckCatalog\Mapper\AbstractMapper');
+        $mockedMapper->expects($this->once())
+            ->method('usePaginator');
+
+        $service = $this->getService();
+        $service->setEntityMapper($mockedMapper);
+        $service->usePaginator(array());
     }
 
     public function getService()

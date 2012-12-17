@@ -12,15 +12,6 @@ class Product extends AbstractService
     protected $specService;
     protected $companyService;
 
-    public function find(array $data, $populate=false, $recursive=false)
-    {
-        $product = $this->getEntityMapper()->find($data);
-        if($populate) {
-            $this->populate($product, $recursive);
-        }
-        return $product;
-    }
-
     public function update($dataOrModel, array $originalVals = null)
     {
         if (null === $originalVals && is_array($dataOrModel)) {

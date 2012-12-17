@@ -12,7 +12,14 @@ class AbstractService implements ServiceLocatorAwareInterface
 
     public function find(array $data, $populate=false, $recursive=false)
     {
-        return $this->getEntityMapper()->find($data);
+        $model = $this->getEntityMapper()->find($data);
+        if(!$model instanceOf \SpeckCatalog\Model\AbstractModel) {
+            return false;
+        }
+        if ($populate) {
+            $this->populate($model, $recursive);
+        }
+        return $model;
     }
 
     public function populate($model, $recursive=false)
@@ -68,17 +75,6 @@ class AbstractService implements ServiceLocatorAwareInterface
     public function usePaginator($options=array())
     {
         $this->getEntityMapper()->usePaginator($options);
-        return $this;
-    }
-
-    public function getPaginator()
-    {
-        return $this->paginator;
-    }
-
-    public function setPaginator($paginator)
-    {
-        $this->paginator = $paginator;
         return $this;
     }
 }
